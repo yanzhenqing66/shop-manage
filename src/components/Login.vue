@@ -67,14 +67,13 @@ export default {
   methods: {
     // 表单预验证
     login() {
-      this.$refs.loginRef.validate(async valid => {
+      this.$refs.loginRef.validate(async (valid) => {
         if (!valid) return;
         const { data: res } = await this.$axios.post("login", this.loginForm);
-        if (res.meta.status !== 200)  return this.$message.error('登录失败')
-        this.$message.success('登录成功')
-        console.log(res);
-        window.sessionStorage.setItem('token', res.data.token)
-        this.$router.push('/home')
+        if (res.meta.status !== 200) return this.$message.error("登录失败");
+        this.$message.success("登录成功");
+        window.sessionStorage.setItem("token", res.data.token);
+        this.$router.push("/home");
       });
     },
     // 重置表单
