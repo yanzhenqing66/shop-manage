@@ -33,7 +33,7 @@
               <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)"></el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="180">
+          <el-table-column label="操作" width="200">
             <template slot-scope="scope">
               <el-button
                 type="primary"
@@ -48,7 +48,12 @@
                 @click="handleDelete(scope.row.id)"
               ></el-button>
               <el-tooltip effect="dark" content="分配权限" placement="top" :enterable="false">
-                <el-button type="warning" size="mini" icon="el-icon-setting"></el-button>
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-setting"
+                  @click="showRolesDialog(scope.row)"
+                ></el-button>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -103,6 +108,29 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="editUserInfo">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 弹出分配角色权限对话框 -->
+    <el-dialog title="分配角色" :visible.sync="setRolesVisible" width="50%" @close="closedRolesVisible">
+      <div>
+        <h4>当前用户：{{userInfo.username}}</h4>
+        <h4>当前角色：{{userInfo.role_name}}</h4>
+        <p>
+          分配新角色：
+          <el-select v-model="selectedRolesId" placeholder="请选择">
+            <el-option
+              v-for="item in rolesList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRolesVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveRolesSeleted">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -200,6 +228,14 @@ export default {
           },
         ],
       },
+      // 分配角色对话框的显示和隐藏
+      setRolesVisible: false,
+      // 用户信息
+      userInfo: {},
+      // 角色列表
+      rolesList: [],
+      // 分配角色中，被选中的角色
+      selectedRolesId: "",
     };
   },
   created() {
@@ -307,15 +343,37 @@ export default {
       this.$message.success("删除用户成功！");
       this.getUserList();
     },
+    async showRolesDialog(userInfo) {
+      this.userInfo = userInfo;
+      // 发起获取角色列表的网络请求
+      const { data: res } = await this.$axios.get("roles");
+      if (res.meta.status !== 200) {
+        this.$message.error("获取角色列表失败！");
+      }
+      this.rolesList = res.data;
+      this.setRolesVisible = true;
+    },
+    // 确定分配角色
+    async saveRolesSeleted() {
+      const {
+        data: res,
+      } = await this.$axios.put(`users/${this.userInfo.id}/role`, {
+        rid: this.selectedRolesId,
+      });
+      if (res.meta.status !== 200) {
+        return this.$message.error("分配用户角色失败");
+      }
+      this.$message.success("分配用户角色成功");
+      this.getUserList();
+      this.setRolesVisible = false;
+    },
+    closedRolesVisible() {
+      this.selectedRolesId = "";
+      this.userInfo = {};
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
-.el-table {
-  margin-top: 15px;
-}
-.el-pagination {
-  margin-top: 15px;
-}
 </style>
