@@ -40,7 +40,7 @@
           <el-button type="success" plain size="mini" v-else-if="scope.row.cat_level === 1">二级</el-button>
           <el-button type="warning" plain size="mini" v-else>三级</el-button>
         </template>
-        <template slot="opt" slot-scope="scope">
+        <template slot="opt">
           <el-button type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
         </template>
