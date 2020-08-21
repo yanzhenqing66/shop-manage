@@ -57,45 +57,45 @@ export default {
     return {
       menuList: [],
       iconMenu: {
-        "125": "iconfont icon-users",
-        "103": "iconfont icon-tijikongjian",
-        "101": "iconfont icon-3702mima",
-        "102": "iconfont icon-danju",
-        "145": "iconfont icon-baobiao",
+        '125': 'iconfont icon-users',
+        '103': 'iconfont icon-tijikongjian',
+        '101': 'iconfont icon-3702mima',
+        '102': 'iconfont icon-danju',
+        '145': 'iconfont icon-baobiao',
       },
       isCollapse: false,
-      activePath: "",
-    };
+      activePath: '',
+    }
   },
   created() {
     // 获取左侧菜单
-    this.getMenuList();
-    this.activePath = window.sessionStorage.getItem("activePath");
+    this.getMenuList()
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   methods: {
     // 退出登录
     logout() {
-      window.sessionStorage.clear();
-      this.$router.push("/login");
+      window.sessionStorage.clear()
+      this.$router.push('/login')
     },
     // 获取左侧菜单
     async getMenuList() {
-      const { data: res } = await this.$axios.get("menus");
+      const { data: res } = await this.$axios.get('menus')
       if (res.meta.status !== 200)
-        return this.$message.error("获取菜单列表失败！");
-      this.menuList = res.data;
+        return this.$message.error('获取菜单列表失败！')
+      this.menuList = res.data
     },
     // 侧边栏隐藏
     toggleColl() {
-      this.isCollapse = !this.isCollapse;
+      this.isCollapse = !this.isCollapse
     },
     // 保存菜单的激活状态
     saveNavState(activePath) {
-      window.sessionStorage.setItem("activePath", activePath);
-      this.activePath = activePath;
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

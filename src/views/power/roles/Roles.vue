@@ -108,94 +108,95 @@ export default {
       rightsList: [],
       // 树形控件的属性绑定对象
       treeProps: {
-        label: "authName",
-        children: "children",
+        label: 'authName',
+        children: 'children',
       },
       // 默认被选中的节点id值数组
       defKeys: [],
-      rolesId: "",
-    };
+      rolesId: '',
+    }
   },
   created() {
     // 获取角色列表
-    this.getRolesList();
+    this.getRolesList()
   },
   methods: {
     // 发起网络请求，获取权限列表
     async getRolesList() {
-      const { data: res } = await this.$axios.get("roles");
+      const { data: res } = await this.$axios.get('roles')
       if (res.meta.status !== 200) {
-        return this.$message.error("获取角色信息失败！");
+        return this.$message.error('获取角色信息失败！')
       }
-      this.rolesList = res.data;
+      this.rolesList = res.data
     },
     async removeTagById(role, rightId) {
       const confirmRes = await this.$confirm(
-        "此操作将永久删除该文件, 是否继续?",
-        "提示",
+        '此操作将永久删除该文件, 是否继续?',
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         }
-      ).catch((err) => err);
-      if (confirmRes !== "confirm") {
-        return this.$message.info("已取消了删除！");
+      ).catch((err) => err)
+      if (confirmRes !== 'confirm') {
+        return this.$message.info('已取消了删除！')
       }
       // 发起网络请求。删除角色权限
       const { data: res } = await this.$axios.delete(
         `roles/${role.id}/rights/${rightId}`
-      );
+      )
 
       if (res.meta.status !== 200) {
-        this.$message.error("删除权限失败！");
+        this.$message.error('删除权限失败！')
       }
-      this.$message.success("删除成功！");
-      role.children = res.data;
+      this.$message.success('删除成功！')
+      role.children = res.data
     },
     async showRightsDialog(role) {
-      this.rolesId = role.id;
+      this.rolesId = role.id
       // 发起网络请求，获取所有权限列表
-      const { data: res } = await this.$axios.get("rights/tree ");
+      const { data: res } = await this.$axios.get('rights/tree ')
       if (res.meta.status !== 200) {
-        this.$message.error("获取权限列表失败！");
+        this.$message.error('获取权限列表失败！')
       }
-      this.rightsList = res.data;
-      this.getLeafKeys(role, this.defKeys);
-      this.setRightsDialog = true;
+      this.rightsList = res.data
+      this.getLeafKeys(role, this.defKeys)
+      this.setRightsDialog = true
     },
     // 通过递归的方式，获取角色的三级权限的id，并保存到defKeys数组中
     getLeafKeys(node, arr) {
       // 如果不包含children属性，则为三级权限
       if (!node.children) {
-        return arr.push(node.id);
+        return arr.push(node.id)
       }
-      node.children.forEach((item) => this.getLeafKeys(item, arr));
+      node.children.forEach((item) => this.getLeafKeys(item, arr))
     },
     sightsClosed() {
-      this.defKeys = [];
+      this.defKeys = []
     },
     async allowRights() {
       const keys = [
         ...this.$refs.treeRef.getCheckedKeys(),
         ...this.$refs.treeRef.getHalfCheckedKeys(),
-      ];
-      const idStr = keys.join(",");
+      ]
+      const idStr = keys.join(',')
       // 发起角色分配权限的网络请求
-      const {
-        data: res,
-      } = await this.$axios.post(`roles/${this.rolesId}/rights`, {
-        rids: idStr,
-      });
+      const { data: res } = await this.$axios.post(
+        `roles/${this.rolesId}/rights`,
+        {
+          rids: idStr,
+        }
+      )
       if (res.meta.status !== 200) {
-        return this.$message.error("分配权限失败");
+        return this.$message.error('分配权限失败')
       }
-      this.$message.success("分配权限成功");
-      this.getRolesList();
-      this.setRightsDialog = false;
+      this.$message.success('分配权限成功')
+      this.getRolesList()
+      this.setRightsDialog = false
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

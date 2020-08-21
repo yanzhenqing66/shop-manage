@@ -29,7 +29,7 @@
 export default {
   data() {
     return {
-      rightsList: []
+      rightsList: [],
     }
   },
   created() {
@@ -39,16 +39,15 @@ export default {
   methods: {
     // 发起网络请求，获取权限列表
     async getRightsList() {
-      const {data: res} = await this.$axios.get('rights/list')
-      if(res.meta.status !== 200) {
-        return this.$message.error("获取权限列表失败！");
+      const { data: res } = await this.$axios.get('rights/list')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取权限列表失败！')
       }
       this.rightsList = res.data
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="less" scoped>
-
 </style>

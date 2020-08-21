@@ -141,24 +141,24 @@ export default {
   data() {
     // 自定义邮箱验证规则
     var checkEmail = (rule, value, cb) => {
-      const regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+      const regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
       if (regEmail.test(value)) {
-        return cb();
+        return cb()
       }
-      cb(new Error("请输入合法的邮箱"));
-    };
+      cb(new Error('请输入合法的邮箱'))
+    }
     // 自定义手机号验证规则
     var checkPhone = (rule, value, cb) => {
-      const regPhone = /^1[3456789]\d{9}$/;
+      const regPhone = /^1[3456789]\d{9}$/
       if (regPhone.test(value)) {
-        return cb();
+        return cb()
       }
-      cb(new Error("请输入合法的手机号"));
-    };
+      cb(new Error('请输入合法的手机号'))
+    }
     return {
       // 用户列表信息
       queryInfo: {
-        query: "",
+        query: '',
         pagenum: 1,
         pagesize: 2,
       },
@@ -168,43 +168,43 @@ export default {
       addDialogVisible: false,
       // 添加用户
       addForm: {
-        username: "",
-        password: "",
-        email: "",
-        mobile: "",
+        username: '',
+        password: '',
+        email: '',
+        mobile: '',
       },
       // 添加用户验证
       addFormRules: {
         username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+          { required: true, message: '请输入用户名', trigger: 'blur' },
           {
             min: 3,
             max: 10,
-            message: "长度在 3 到 10 个字符",
-            trigger: "blur",
+            message: '长度在 3 到 10 个字符',
+            trigger: 'blur',
           },
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
+          { required: true, message: '请输入密码', trigger: 'blur' },
           {
             min: 6,
             max: 10,
-            message: "长度在 6 到 10 个字符",
-            trigger: "blur",
+            message: '长度在 6 到 10 个字符',
+            trigger: 'blur',
           },
         ],
         email: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           {
             validator: checkEmail,
-            trigger: "blur",
+            trigger: 'blur',
           },
         ],
         mobile: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
+          { required: true, message: '请输入手机号', trigger: 'blur' },
           {
             validator: checkPhone,
-            trigger: "blur",
+            trigger: 'blur',
           },
         ],
       },
@@ -214,17 +214,17 @@ export default {
       // 修改表单的验证规则对象
       editFormRules: {
         email: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           {
             validator: checkEmail,
-            trigger: "blur",
+            trigger: 'blur',
           },
         ],
         mobile: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
+          { required: true, message: '请输入手机号', trigger: 'blur' },
           {
             validator: checkPhone,
-            trigger: "blur",
+            trigger: 'blur',
           },
         ],
       },
@@ -235,144 +235,145 @@ export default {
       // 角色列表
       rolesList: [],
       // 分配角色中，被选中的角色
-      selectedRolesId: "",
-    };
+      selectedRolesId: '',
+    }
   },
   created() {
     // 获取用户列表
-    this.getUserList();
+    this.getUserList()
   },
   methods: {
     // 发起获取用户列表的网络请求
     async getUserList() {
-      const { data: res } = await this.$axios.get("users", {
+      const { data: res } = await this.$axios.get('users', {
         params: this.queryInfo,
-      });
+      })
       if (res.meta.status !== 200)
-        return this.$message.error("获取用户列表失败！");
-      this.userList = res.data.users;
-      this.total = res.data.total;
+        return this.$message.error('获取用户列表失败！')
+      this.userList = res.data.users
+      this.total = res.data.total
     },
     // 监听 pagesize 的改变事件
     handleSizeChange(newSize) {
-      this.queryInfo.pagesize = newSize;
-      this.getUserList();
+      this.queryInfo.pagesize = newSize
+      this.getUserList()
     },
     // 监听 分页 页码值 改变的事件
     handleCurrentChange(newPage) {
-      this.queryInfo.pagenum = newPage;
-      this.getUserList();
+      this.queryInfo.pagenum = newPage
+      this.getUserList()
     },
     // switch 状态管理 发起修改用户状态的网络请求
     async userStateChange(userInfo) {
       const { data: res } = await this.$axios.put(
         `users/${userInfo.id}/state/${userInfo.mg_state}`
-      );
+      )
       if (res.meta.status !== 200) {
-        userInfo.mg_state = !userInfo.mg_state;
-        return this.$message.error("设置状态失败！");
+        userInfo.mg_state = !userInfo.mg_state
+        return this.$message.error('设置状态失败！')
       }
-      this.$message.success("设置状态成功！");
+      this.$message.success('设置状态成功！')
     },
     // 监听对话框关闭以及表单重置事件
     dialogClose() {
-      this.$refs.addFormRef.resetFields();
+      this.$refs.addFormRef.resetFields()
     },
     addUser() {
       this.$refs.addFormRef.validate(async (valid) => {
-        if (!valid) return;
+        if (!valid) return
         // 发起添加用户的网络请求
-        const { data: res } = await this.$axios.post("users", this.addForm);
+        const { data: res } = await this.$axios.post('users', this.addForm)
         if (res.meta.status !== 201) {
-          this.$message.error("添加用户失败！");
+          this.$message.error('添加用户失败！')
         }
-        this.$message.success("添加用户成功！");
-        this.addDialogVisible = false;
-        this.getUserList();
-      });
+        this.$message.success('添加用户成功！')
+        this.addDialogVisible = false
+        this.getUserList()
+      })
     },
     // 展示修改用户的对话框  根据ID查询用户信息
     async showEditDialog(id) {
-      const { data: res } = await this.$axios.get("users/" + id);
-      this.editForm = res.data;
-      this.editDialogVisible = true;
+      const { data: res } = await this.$axios.get('users/' + id)
+      this.editForm = res.data
+      this.editDialogVisible = true
     },
     // 关闭重置修改用户信息的表单
     editFormClose() {
-      this.$refs.editFormRef.resetFields();
+      this.$refs.editFormRef.resetFields()
     },
     editUserInfo() {
       this.$refs.editFormRef.validate(async (valid) => {
-        if (!valid) return;
+        if (!valid) return
         // 发起修改用户信息的网络请求
         const { data: res } = await this.$axios.put(
-          "users/" + this.editForm.id,
+          'users/' + this.editForm.id,
           {
             email: this.editForm.email,
             mobile: this.editForm.mobile,
           }
-        );
+        )
         if (res.meta.status !== 200) {
-          return this.$message.error("修改用户信息失败！");
+          return this.$message.error('修改用户信息失败！')
         }
-        this.$message.success("修改用户信息成功！");
-        this.editDialogVisible = false;
-        this.getUserList();
-      });
+        this.$message.success('修改用户信息成功！')
+        this.editDialogVisible = false
+        this.getUserList()
+      })
     },
     // 根据id删除对应的用户
     async handleDelete(id) {
       // 弹框询问用户是否删除用户
       const confirmRes = await this.$confirm(
-        "此操作将永久删除该用户, 是否继续?",
-        "提示",
+        '此操作将永久删除该用户, 是否继续?',
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         }
-      ).catch((err) => err);
-      if (confirmRes !== "confirm") {
-        return this.$message.info("已取消删除");
+      ).catch((err) => err)
+      if (confirmRes !== 'confirm') {
+        return this.$message.info('已取消删除')
       }
       // 发起网络请求，获取id删除对应的用户
-      const { data: res } = await this.$axios.delete("users/" + id);
+      const { data: res } = await this.$axios.delete('users/' + id)
       if (res.meta.status !== 200) {
-        return this.$message.error("删除用户失败！");
+        return this.$message.error('删除用户失败！')
       }
-      this.$message.success("删除用户成功！");
-      this.getUserList();
+      this.$message.success('删除用户成功！')
+      this.getUserList()
     },
     async showRolesDialog(userInfo) {
-      this.userInfo = userInfo;
+      this.userInfo = userInfo
       // 发起获取角色列表的网络请求
-      const { data: res } = await this.$axios.get("roles");
+      const { data: res } = await this.$axios.get('roles')
       if (res.meta.status !== 200) {
-        this.$message.error("获取角色列表失败！");
+        this.$message.error('获取角色列表失败！')
       }
-      this.rolesList = res.data;
-      this.setRolesVisible = true;
+      this.rolesList = res.data
+      this.setRolesVisible = true
     },
     // 确定分配角色
     async saveRolesSeleted() {
-      const {
-        data: res,
-      } = await this.$axios.put(`users/${this.userInfo.id}/role`, {
-        rid: this.selectedRolesId,
-      });
+      const { data: res } = await this.$axios.put(
+        `users/${this.userInfo.id}/role`,
+        {
+          rid: this.selectedRolesId,
+        }
+      )
       if (res.meta.status !== 200) {
-        return this.$message.error("分配用户角色失败");
+        return this.$message.error('分配用户角色失败')
       }
-      this.$message.success("分配用户角色成功");
-      this.getUserList();
-      this.setRolesVisible = false;
+      this.$message.success('分配用户角色成功')
+      this.getUserList()
+      this.setRolesVisible = false
     },
     closedRolesVisible() {
-      this.selectedRolesId = "";
-      this.userInfo = {};
+      this.selectedRolesId = ''
+      this.userInfo = {}
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
