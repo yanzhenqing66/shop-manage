@@ -7,12 +7,24 @@ import './assets/css/global.css'
 // 导入字体图标
 import './assets/fonts/iconfont.css'
 
+// 实现进度条功能
+import Nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
+
 // 使用axios请求
 import axios from 'axios'
 
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
 axios.interceptors.request.use(config => {
+  // 加载进度条
+  Nprogress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
+  return config
+})
+
+axios.interceptors.response.use(config => {
+  // 隐藏进度条
+  Nprogress.done()
   return config
 })
 Vue.prototype.$axios = axios
