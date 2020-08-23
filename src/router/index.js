@@ -8,6 +8,8 @@ import Rights from '../views/power/rights/Rights'
 import Roles from '../views/power/roles/Roles'
 import Cate from '../views/goods/Cate'
 import GoodsParams from '../views/goods/GoodsParams'
+import List from '../views/goods/List'
+import AddGoods from '../views/goods/AddGoods'
 
 Vue.use(VueRouter)
 
@@ -18,33 +20,27 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'login',
     component: Login
   },
   {
     path: '/home',
-    name: 'home',
     component: Home,
     redirect: '/welcome',
     children: [
       {
         path: '/welcome',
-        name: 'welcome',
         component: Welcome
       },
       {
         path: '/users',
-        name: 'users',
         component: Users
       },
       {
         path: '/rights',
-        name: 'rights',
         component: Rights
       },
       {
         path: '/roles',
-        name: 'roles',
         component: Roles
       },
       {
@@ -54,6 +50,14 @@ const routes = [
       {
         path: '/params',
         component: GoodsParams
+      },
+      {
+        path: '/goods',
+        component: List
+      },
+      {
+        path: '/goods/add',
+        component: AddGoods
       }
     ]
   },
